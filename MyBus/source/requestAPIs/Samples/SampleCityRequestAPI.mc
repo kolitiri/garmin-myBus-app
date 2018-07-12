@@ -1,14 +1,14 @@
- /**
- * SampleCityRequestAPI Model Object
- *
- * Use this class as a blueprint to create classes
- * for different APIs.
- *
- * This class should be a subclass of APIRequest which is
- * actually making the requests and receives the responses.
- *
- * @author Christos Liontos
- */
+/**
+* SampleCityRequestAPI Model Object
+*
+* Use this class as a blueprint to create classes
+* for different APIs.
+*
+* This class should be a subclass of APIRequest which is
+* actually making the requests and receives the responses.
+*
+* @author Christos Liontos
+*/
 class SampleCityRequestAPI extends APIRequest {
 
 	var availableStops;
@@ -38,7 +38,7 @@ class SampleCityRequestAPI extends APIRequest {
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
 	function getSampleCityStopsEndpoint() {
-		
+
 		// Construct the url, parameters and name of the callback
 		// function for the API stops request that you will be calling
 
@@ -64,9 +64,9 @@ class SampleCityRequestAPI extends APIRequest {
 	* @return responseInfo (dict): A dictionary with the response information
 	*/
 	function onReceiveSampleCityStops(data) {
-	
+
 		// Parse the response received by the request to the stops endpoint.
-		
+
 		var stopNames = [];
 
 		// The stopNames returned in the dictionary should be a list of strings
@@ -85,18 +85,18 @@ class SampleCityRequestAPI extends APIRequest {
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
 	function getSampleCityPredictionsEndpoint() {
-	
+
 		// At this point we should have a list of available stops and the one that is
 		// selected by the user. Construct the url, parameters and name of the callback
 		// function for the API predictons request that you will be calling.
 
 		// TIP: use SampleCityRequestAPI.availableStops and RequestAPI.selectedStop
 		// variables to iterate over and find the one selected by the user.
-		
+
 		var url = "";
-		
+
 		var parameters = {};
-		
+
 		var requestInfo = {
 			"url" => url,
 			"parameters" => parameters,
@@ -114,7 +114,7 @@ class SampleCityRequestAPI extends APIRequest {
 	* @return responseInfo (dict): A dictionary with the response information
 	*/
 	function onReceiveSampleCityPredictions(data) {
-	
+
 		// Parse the response received by the request to the predictions endpoint.
 
 		var result = "";

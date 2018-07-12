@@ -2,11 +2,11 @@ using Toybox.Position as Position;
 using Toybox.WatchUi as Ui;
 
 
- /**
- * Delegate Model Object
- * 
- * @author Christos Liontos
- */
+/**
+* Delegate Model Object
+*
+* @author Christos Liontos
+*/
 class Delegate extends Ui.BehaviorDelegate {
 
 	var notify;
@@ -34,7 +34,7 @@ class Delegate extends Ui.BehaviorDelegate {
 			gps_ready_msg = false;
 
 			APIRequestInstance.setPosition(posnInfo);
-			var stopsEndpoint = APIRequestInstance.stopsEndpoint;			
+			var stopsEndpoint = APIRequestInstance.stopsEndpoint;
 			// Make a request to the stops endpoint
 			APIRequestInstance.makeWebRequest(stopsEndpoint);
 		} else {

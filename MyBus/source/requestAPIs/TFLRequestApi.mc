@@ -1,14 +1,15 @@
- using Toybox.WatchUi as Ui;
- 
- /**
- * TFLRequestAPI Model Object that provides a number of
- * functions that deal with the London's TFL API.
- *
- * This class is a subclass of APIRequest which is
- * actually making the requests and receives the responses.
- *
- * @author Christos Liontos
- */
+using Toybox.WatchUi as Ui;
+
+
+/**
+* TFLRequestAPI Model Object that provides a number of
+* functions that deal with the London's TFL API.
+*
+* This class is a subclass of APIRequest which is
+* actually making the requests and receives the responses.
+*
+* @author Christos Liontos
+*/
 class TFLRequestAPI extends APIRequest {
 
 	// Default radius to 100m. To be overridden by the user
@@ -24,15 +25,16 @@ class TFLRequestAPI extends APIRequest {
 	* @param stopsEndpoint (symbol): Function the returns the stops endpoint url
 	* @param predictionsEndpoint (symbol): Function the returns the predictions endpoint url
 	* @param stopsCallback (symbol): Function that is invoked once we have a stops response 
-	* @param predictionsCallback (symbol): Function that is invoked once we have a predictions response 
+	* @param predictionsCallback (symbol): Function that is invoked once we have a predictions response
 	*/
 	function initialize(handler) {
 		stopsEndpoint = :getTFLStopsEndpoint;
 		predictionsEndpoint = :getTFLPredictionsEndpoint;
 		stopsCallback = :onReceiveTFLStops;
 		predictionsCallback = :onReceiveTFLPredictions;
+		validatePosition = :validatePosition;
 		APIRequest.initialize(handler, stopsEndpoint, predictionsEndpoint, stopsCallback, predictionsCallback);
-		
+
 		// Ask user input for the search radius
 		Ui.pushView(new RadiusPicker(), new RadiusPickerDelegate(self), Ui.SLIDE_IMMEDIATE);
 	}
@@ -49,28 +51,47 @@ class TFLRequestAPI extends APIRequest {
 	}
 
 	/**
+	* Validate the user's location. Should be within UK bounds
+	* 
+	* @param lat (int): The latitude
+	* @param lon (int): The longtitude
+	*/
+	function validatePosition(lat,lon) {
+		if (lat < 49.9 || lat > 58.7 || lon < -11.05 || lon > 1.78) {
+			return 0;
+		}
+		return 1;
+	}
+
+	/**
 	* Generate the url, parameters and callback for a stops request.
 	* 
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
-	function getTFLStopsEndpoint() {	
-		var lat = posnInfo.position.toDegrees()[0].toString();
-		var lon = posnInfo.position.toDegrees()[1].toString();
+	function getTFLStopsEndpoint() {
+		var requestInfo = {
+			"url" => null,
+			"parameters" => null,
+			"callback" => :onReceiveStops,
+			"error" => null
+		};
 
-		var url = "https://api.tfl.gov.uk/Stoppoint";
+		var lat = posnInfo.toDegrees()[0];
+		var lon = posnInfo.toDegrees()[1];
 
-		var parameters = {
-			"lat" => lat,
-			"lon" => lon,
+		if (validatePosition(lat,lon) == 0) {
+			requestInfo["error"] = "Oops! It appears your\nlocation is out\nof the UK bounds";
+		}
+
+		requestInfo["url"] = "https://api.tfl.gov.uk/Stoppoint";
+
+		requestInfo["parameters"] = {
+			"lat" => lat.toString(),
+			"lon" => lon.toString(),
 			"radius" => searchRadius,
 			"stoptypes" => "NaptanPublicBusCoachTram"
 		};
-		
-		var requestInfo = {
-			"url" => url,
-			"parameters" => parameters,
-			"callback" => :onReceiveStops
-		};
+
 		return requestInfo;
 	}
 
@@ -80,6 +101,12 @@ class TFLRequestAPI extends APIRequest {
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
 	function getTFLPredictionsEndpoint() {
+		var requestInfo = {
+			"url" => null,
+			"parameters" => {},
+			"callback" => :onReceivePredictions
+		};
+
 		var naptanId = null;
 		for(var i = 0; i < availableStops.size(); i ++) {
 			if (availableStops[i]["stopLetter"] == selectedStop) {
@@ -87,14 +114,9 @@ class TFLRequestAPI extends APIRequest {
 				break;
 			}
 		}
-		
-		var url = "https://api.tfl.gov.uk/StopPoint/" + naptanId + "/Arrivals?mode=bus";
-		
-		var requestInfo = {
-			"url" => url,
-			"parameters" => {},
-			"callback" => :onReceivePredictions
-		};
+
+		requestInfo["url"] = "https://api.tfl.gov.uk/StopPoint/" + naptanId + "/Arrivals?mode=bus";
+
 		return requestInfo;
 	}
 
@@ -111,22 +133,22 @@ class TFLRequestAPI extends APIRequest {
 			"stopNames" => null,
 			"error" => null
 		};
-		
+
 		availableStops = parseStops(data);
 
 		if (availableStops.size() > 0) {
-		   	var stopNames = [];
-		   	for(var i = 0; i < availableStops.size(); i ++) {
-		   		var stop = availableStops[i]["stopLetter"];
-		   		if (stop != null) {
-		    		stopNames.add(stop);
-		    	}
+			var stopNames = [];
+			for(var i = 0; i < availableStops.size(); i ++) {
+				var stop = availableStops[i]["stopLetter"];
+				if (stop != null) {
+					stopNames.add(stop);
+				}
 			}
 			responseInfo["stopNames"] = stopNames;
 		} else {
 			responseInfo["error"] = "No stops around";
 		}
-		
+
 		return responseInfo;
 	}
 
@@ -143,13 +165,13 @@ class TFLRequestAPI extends APIRequest {
 			"result" => null,
 			"error" => null
 		};
-		
+
 		var result = "Stop " + selectedStop + "\n";
 		var buses = parseBuses(data);
 
 		for(var i = 0; i < buses.keys().size(); i ++) {
 			var key = buses.keys()[i];
-			result += key + " in: " + buses[key].toString() + "\n"; 
+			result += key + " in: " + buses[key].toString() + "\n";
 		}
 
 		responseInfo["result"] = result;
@@ -195,7 +217,7 @@ class TFLRequestAPI extends APIRequest {
 
 			sort(bus_list);
 		}
-		return buses;	
+		return buses;
 	}
 	
 	function sort(list) {

@@ -2,18 +2,18 @@ using Toybox.WatchUi as Ui;
 using Toybox.Communications as Comm;
 
 
- /**
- * APIRequest Model Object that provides an interface
- * for making web requests and handling the responses.
- *
- * This class acts as a wrapper and it requires a subclass
- * that implements the actual functions that perform the
- * operations. This makes it easy to extend the functionality
- * for more cities by simply creating a new subclass. See:
- * requestAPIs.Samples.SampleCityRequestAPI
- *
- * @author Christos Liontos
- */
+/**
+* APIRequest Model Object that provides an interface
+* for making web requests and handling the responses.
+*
+* This class acts as a wrapper and it requires a subclass
+* that implements the actual functions that perform the
+* operations. This makes it easy to extend the functionality
+* for more cities by simply creating a new subclass. See:
+* requestAPIs.Samples.SampleCityRequestAPI
+*
+* @author Christos Liontos
+*/
 class APIRequest {
 
 	var notify;
@@ -24,6 +24,7 @@ class APIRequest {
 	var predictionsEndpoint;
 	var stopsCallback;
 	var predictionsCallback;
+	var validatePosition;
 
 	/**
 	* Constructor.
@@ -42,7 +43,7 @@ class APIRequest {
 		predictionsEndpoint = predictionsEndpoint;
 		stopsCallback = stopsCallback;
 		predictionsCallback = predictionsCallback;
-	}	
+	}
 
 	/**
 	* Set the position information acquired by the GPS
@@ -77,17 +78,23 @@ class APIRequest {
 		// Generate the request information. This will invoke the functions
 		// of the subclass (i.e TFLRequestApi) and works out the variables.
 		var requestInfo = method(requestType).invoke();
-		
+
 		var url = requestInfo["url"];
 		var parameters = requestInfo["parameters"];
 		var callback = requestInfo["callback"];
-	
+		var error = requestInfo["error"];
+
+		if (error != null) {
+			notify.invoke(error);
+			return;
+		}
+
 		var options = {
 			:method => Communications.HTTP_REQUEST_METHOD_GET,
 			:headers => {
 					"Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED},
 			:responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-	   };
+		};
 
 		Comm.makeWebRequest(
 			url,
@@ -112,10 +119,10 @@ class APIRequest {
 			// Handle the stops response. This will invoke the functions
 			// of the subclass (i.e TFLRequestApi) and works out the information.
 			var responseInfo = method(stopsCallback).invoke(data);
-			
+
 			var stopNames = responseInfo["stopNames"];
 			var error = responseInfo["error"];
-			
+
 			if (error == null && stopNames != null) {
 				// We have a stops list. Create a picker with these stops
 				Ui.pushView(new StopsPicker(stopNames), new StopsPickerDelegate(self), Ui.SLIDE_IMMEDIATE);

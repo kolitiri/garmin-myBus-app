@@ -2,38 +2,38 @@ using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
 
- /**
- * WordFactory Model Object
- * 
- * Picked up by the SDK samples.
- */
+/**
+* WordFactory Model Object
+* 
+* Picked up by the SDK samples.
+*/
 class WordFactory extends Ui.PickerFactory {
-    var mWords;
-    var mFont;
+	var mWords;
+	var mFont;
 
-    function initialize(words, options) {
-        PickerFactory.initialize();
+	function initialize(words, options) {
+		PickerFactory.initialize();
 
-        mWords = words;
+		mWords = words;
 
-        if(options != null) {
-            mFont = options.get(:font);
-        }
+		if(options != null) {
+			mFont = options.get(:font);
+		}
 
-        if(mFont == null) {
-            mFont = Gfx.FONT_LARGE;
-        }
-    }
+		if(mFont == null) {
+			mFont = Gfx.FONT_LARGE;
+		}
+	}
 
-    function getSize() {
-        return mWords.size();
-    }
+	function getSize() {
+		return mWords.size();
+	}
 
-    function getValue(index) {
-        return mWords[index];
-    }
+	function getValue(index) {
+		return mWords[index];
+	}
 
-    function getDrawable(index, selected) {
-        return new Ui.Text({:text=>mWords[index], :color=>Gfx.COLOR_WHITE, :font=>mFont, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_CENTER});
-    }
+	function getDrawable(index, selected) {
+		return new Ui.Text({:text=>mWords[index], :color=>Gfx.COLOR_WHITE, :font=>mFont, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_CENTER});
+	}
 }
