@@ -76,8 +76,8 @@ class TFLRequestAPI extends APIRequest {
 			"error" => null
 		};
 
-		var lat = posnInfo.toDegrees()[0];
-		var lon = posnInfo.toDegrees()[1];
+		var lat = posnInfo.position.toDegrees()[0];
+		var lon = posnInfo.position.toDegrees()[1];
 
 		if (validatePosition(lat,lon) == 0) {
 			requestInfo["error"] = "Oops! It appears your\nlocation is out\nof the UK bounds";
@@ -169,9 +169,13 @@ class TFLRequestAPI extends APIRequest {
 		var result = "Stop " + selectedStop + "\n";
 		var buses = parseBuses(data);
 
+		// Construct the string to show in the watch screen
 		for(var i = 0; i < buses.keys().size(); i ++) {
 			var key = buses.keys()[i];
-			result += key + " in: " + buses[key].toString() + "\n";
+			var bus_list_to_str = buses[key].toString();
+			// Remove the brackets from the bus_list
+			var bus_list = bus_list_to_str.substring(1, bus_list_to_str.length() - 1);
+			result += key + " in: " + bus_list + "\n";
 		}
 
 		responseInfo["result"] = result;
