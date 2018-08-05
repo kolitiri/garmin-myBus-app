@@ -9,7 +9,7 @@ The application is using the internal GPS of the watch to pick up your current l
 
 ### Installation
 
-If you already own a Garmin Fenix series watch, go ahead and download the application through Garmin IQ Connect [here](https://apps.garmin.com/en-US/)
+If you already own a Garmin watch, go ahead and download the application through Garmin IQ Connect [here](https://apps.garmin.com/en-US/apps/32c1e832-9bab-4ce3-9461-fb61d8d546a8)
 
 ### Supported devices
 
