@@ -92,7 +92,8 @@ class APIRequest {
 		var options = {
 			:method => Communications.HTTP_REQUEST_METHOD_GET,
 			:headers => {
-					"Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED},
+					"Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED
+			},
 			:responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 		};
 
@@ -161,6 +162,8 @@ class APIRequest {
 
 			if (error == null) {
 				notify.invoke(result);
+			} else {
+				notify.invoke(error);
 			}
 		} else {
 			if (responseCode == -104) {

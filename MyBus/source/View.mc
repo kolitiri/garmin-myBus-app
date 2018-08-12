@@ -24,7 +24,7 @@ class View extends Ui.View {
 	function onUpdate(dc) {
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
 		dc.clear();
-		dc.drawText(dc.getWidth()/2, dc.getHeight()/2, Graphics.FONT_TINY, mMessage, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+		dc.drawText(dc.getWidth()/2, dc.getHeight()/2 + 10, Graphics.FONT_TINY, mMessage, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
 		// Every time we have an update, we need to draw the GPS bar
 		drawGpsBar(dc);

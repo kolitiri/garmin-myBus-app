@@ -89,7 +89,8 @@ class TFLRequestAPI extends APIRequest {
 			"lat" => lat.toString(),
 			"lon" => lon.toString(),
 			"radius" => searchRadius,
-			"stoptypes" => "NaptanPublicBusCoachTram"
+			"stoptypes" => "NaptanPublicBusCoachTram",
+			"returnLines" => "False"
 		};
 
 		return requestInfo;
@@ -169,16 +170,19 @@ class TFLRequestAPI extends APIRequest {
 		var result = "Stop " + selectedStop + "\n";
 		var buses = parseBuses(data);
 
-		// Construct the string to show in the watch screen
-		for(var i = 0; i < buses.keys().size(); i ++) {
-			var key = buses.keys()[i];
-			var bus_list_to_str = buses[key].toString();
-			// Remove the brackets from the bus_list
-			var bus_list = bus_list_to_str.substring(1, bus_list_to_str.length() - 1);
-			result += key + " in: " + bus_list + "\n";
+		if (buses.size() > 0) {
+			// Construct the string to show in the watch screen
+			for(var i = 0; i < buses.keys().size(); i ++) {
+				var key = buses.keys()[i];
+				var bus_list_to_str = buses[key].toString();
+				// Remove the brackets from the bus_list
+				var bus_list = bus_list_to_str.substring(1, bus_list_to_str.length() - 1);
+				result += key + " in: " + bus_list + "\n";
+			}
+			responseInfo["result"] = result;
+		} else {
+			responseInfo["error"] = "Apparently there are\nno buses running at\nbus stop " + selectedStop + "\nat the moment!";
 		}
-
-		responseInfo["result"] = result;
 
 		return responseInfo;
 	}
