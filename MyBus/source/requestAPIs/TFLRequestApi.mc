@@ -15,6 +15,7 @@ class TFLRequestAPI extends APIRequest {
 	// Default radius to 100m. To be overridden by the user
 	var searchRadius = 100;
 	var availableStops;
+	var stopPointEndpoint = "https://api.tfl.gov.uk/StopPoint/";
 
 	/**
 	* Constructor.
@@ -65,6 +66,9 @@ class TFLRequestAPI extends APIRequest {
 
 	/**
 	* Generate the url, parameters and callback for a stops request.
+	*
+	* i.e
+	* https://api.tfl.gov.uk/StopPoint?lat=51.492632&&lon=-0.223061&stoptypes=NaptanPublicBusCoachTram&radius=60&returnLines=False
 	* 
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
@@ -83,7 +87,7 @@ class TFLRequestAPI extends APIRequest {
 			requestInfo["error"] = "Oops! It appears your\nlocation is out\nof the UK bounds";
 		}
 
-		requestInfo["url"] = "https://api.tfl.gov.uk/Stoppoint";
+		requestInfo["url"] = stopPointEndpoint;
 
 		requestInfo["parameters"] = {
 			"lat" => lat.toString(),
@@ -98,13 +102,16 @@ class TFLRequestAPI extends APIRequest {
 
 	/**
 	* Generate the url, parameters and callback for a predictions request.
+	*
+	* i.e
+	* https://api.tfl.gov.uk/StopPoint/490007705L/Arrivals?mode=bus
 	* 
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
 	function getTFLPredictionsEndpoint() {
 		var requestInfo = {
 			"url" => null,
-			"parameters" => {},
+			"parameters" => null,
 			"callback" => :onReceivePredictions
 		};
 
@@ -116,7 +123,11 @@ class TFLRequestAPI extends APIRequest {
 			}
 		}
 
-		requestInfo["url"] = "https://api.tfl.gov.uk/StopPoint/" + naptanId + "/Arrivals?mode=bus";
+		requestInfo["url"] = stopPointEndpoint + naptanId + "/Arrivals";
+
+		requestInfo["parameters"] = {
+			"mode" => "bus"
+		};
 
 		return requestInfo;
 	}
