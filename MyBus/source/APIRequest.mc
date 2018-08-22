@@ -16,6 +16,7 @@ using Toybox.Communications as Comm;
 */
 class APIRequest {
 
+	var name;
 	var notify;
 	var posnInfo;
 	var selectedStop;
@@ -89,13 +90,24 @@ class APIRequest {
 			return;
 		}
 
-		var options = {
-			:method => Communications.HTTP_REQUEST_METHOD_GET,
-			:headers => {
-					"Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED
-			},
-			:responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-		};
+		var options;
+		if (name.equals("TFL-ENDPOINT")) {
+			options = {
+				:method => Communications.HTTP_REQUEST_METHOD_GET,
+				:headers => {
+						"Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED
+				},
+				:responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+			};
+		} else if (name.equals("GMMYBUS-ENDPOINT")) {
+			options = {
+				:method => Communications.HTTP_REQUEST_METHOD_POST,
+				:headers => {
+						"Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON
+				},
+				:responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+			};
+		}
 
 		Comm.makeWebRequest(
 			url,

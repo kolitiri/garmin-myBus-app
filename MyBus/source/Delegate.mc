@@ -20,6 +20,7 @@ class Delegate extends Ui.BehaviorDelegate {
 		// Create a request instance so that we can handle
 		// request and responses to the city's specific API
 		APIRequestInstance = new TFLRequestAPI(handler);
+		APIRequestInstance = new GmmybusRequestAPI(handler);
 	}
 
 	function onMenu() {

@@ -10,13 +10,13 @@ using Toybox.WatchUi as Ui;
 *
 * @author Christos Liontos
 */
-class TFLRequestAPI extends APIRequest {
+class GmmybusRequestAPI extends APIRequest {
 
-	var name = "TFL-ENDPOINT";
+	var name = "GMMYBUS-ENDPOINT";
 	// Default radius to 100m. To be overridden by the user
 	var searchRadius = 100;
 	var availableStops;
-	var stopPointEndpoint = "https://api.tfl.gov.uk/StopPoint/";
+	var stopPointEndpoint = "https://gmmybus.tk";
 
 	/**
 	* Constructor.
@@ -30,10 +30,10 @@ class TFLRequestAPI extends APIRequest {
 	* @param predictionsCallback (symbol): Function that is invoked once we have a predictions response
 	*/
 	function initialize(handler) {
-		stopsEndpoint = :getTFLStopsEndpoint;
-		predictionsEndpoint = :getTFLPredictionsEndpoint;
-		stopsCallback = :onReceiveTFLStops;
-		predictionsCallback = :onReceiveTFLPredictions;
+		stopsEndpoint = :getGmmybusStopsEndpoint;
+		predictionsEndpoint = :getGmmybusPredictionsEndpoint;
+		stopsCallback = :onReceiveGmmybusStops;
+		predictionsCallback = :onReceiveGmmybusPredictions;
 		validatePosition = :validatePosition;
 		APIRequest.initialize(handler, stopsEndpoint, predictionsEndpoint, stopsCallback, predictionsCallback);
 
@@ -73,7 +73,7 @@ class TFLRequestAPI extends APIRequest {
 	* 
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
-	function getTFLStopsEndpoint() {
+	function getGmmybusStopsEndpoint() {
 		var requestInfo = {
 			"url" => null,
 			"parameters" => null,
@@ -88,14 +88,19 @@ class TFLRequestAPI extends APIRequest {
 			requestInfo["error"] = "Oops! It appears your\nlocation is out\nof the UK bounds";
 		}
 
-		requestInfo["url"] = stopPointEndpoint;
+		requestInfo["url"] = stopPointEndpoint + "/stops";
 
 		requestInfo["parameters"] = {
-			"lat" => lat.toString(),
-			"lon" => lon.toString(),
-			"radius" => searchRadius,
-			"stoptypes" => "NaptanPublicBusCoachTram",
-			"returnLines" => "False"
+			"application" => {
+				"apiName"  => "TflApi"
+			},
+			"location" => {
+				"latitude" => lat.toString(),
+				"longtitude" => lon.toString(),
+				"radius" => searchRadius,
+				"stopTypes" => "NaptanPublicBusCoachTram",
+				"returnLines" => "False"
+			}
 		};
 
 		return requestInfo;
@@ -109,7 +114,7 @@ class TFLRequestAPI extends APIRequest {
 	* 
 	* @return requestInfo (dict): A dictionary with the request variables
 	*/
-	function getTFLPredictionsEndpoint() {
+	function getGmmybusPredictionsEndpoint() {
 		var requestInfo = {
 			"url" => null,
 			"parameters" => null,
@@ -124,10 +129,15 @@ class TFLRequestAPI extends APIRequest {
 			}
 		}
 
-		requestInfo["url"] = stopPointEndpoint + naptanId + "/Arrivals";
+		requestInfo["url"] = stopPointEndpoint + "/predictions";
 
 		requestInfo["parameters"] = {
-			"mode" => "bus"
+			"application" => {
+				"apiName" => "TflApi"
+			},
+			"stop" => {
+				"naptanId" => naptanId
+			}
 		};
 
 		return requestInfo;
@@ -141,7 +151,7 @@ class TFLRequestAPI extends APIRequest {
 	* @param data (dict): The response data of a request to the stops endpoint
 	* @return responseInfo (dict): A dictionary with the response information
 	*/
-	function onReceiveTFLStops(data) {
+	function onReceiveGmmybusStops(data) {
 		var responseInfo = {
 			"stopNames" => null,
 			"error" => null
@@ -173,7 +183,7 @@ class TFLRequestAPI extends APIRequest {
 	* @param data (dict): The response data of a request to the predictions endpoint
 	* @return responseInfo (dict): A dictionary with the response information
 	*/
-	function onReceiveTFLPredictions(data) {
+	function onReceiveGmmybusPredictions(data) {
 		var responseInfo = {
 			"result" => null,
 			"error" => null
