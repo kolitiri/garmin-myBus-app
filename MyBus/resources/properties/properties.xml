@@ -1,0 +1,3 @@
+<properties>
+	<property id="useDirectTFL" type="boolean">false</property>
+</properties>

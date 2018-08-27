@@ -1,5 +1,6 @@
-using Toybox.WatchUi as Ui;
+using Toybox.Application as App;
 using Toybox.Communications as Comm;
+using Toybox.WatchUi as Ui;
 
 
 /**
@@ -91,7 +92,8 @@ class APIRequest {
 		}
 
 		var options;
-		if (name.equals("TFL-ENDPOINT")) {
+		var api_pref = App.getApp().getProperty("useDirectTFL");
+		if (api_pref == true) {
 			options = {
 				:method => Communications.HTTP_REQUEST_METHOD_GET,
 				:headers => {
@@ -99,7 +101,7 @@ class APIRequest {
 				},
 				:responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 			};
-		} else if (name.equals("GMMYBUS-ENDPOINT")) {
+		} else {
 			options = {
 				:method => Communications.HTTP_REQUEST_METHOD_POST,
 				:headers => {

@@ -1,4 +1,5 @@
 <strings>
     <string id="AppName">MyBus</string>
     <string id="prompt">Click the menu button</string>
+    <string id="useDirectTFLlabel">Make requests directly to TFL</string>
 </strings>
