@@ -1,5 +1,5 @@
 # MyBus Garmin watch app
-This is a Garmin watch application that helps you keep track of the bus arrivals on your nearest bus stops.
+This is a Garmin watch application, written in [Monkey-C](https://developer.garmin.com/connect-iq/monkey-c/) that helps you keep track of the bus arrivals on your nearest bus stops.
 
 It currently works only for London as it makes use of the TFL's unified API that can be found [here](https://api.tfl.gov.uk/)
 
