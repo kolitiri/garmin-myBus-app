@@ -16,7 +16,7 @@ class GmmybusRequestAPI extends APIRequest {
 	// Default radius to 100m. To be overridden by the user
 	var searchRadius = 100;
 	var availableStops;
-	var stopPointEndpoint = "https://gmmybus.herokuapp.com";
+	var stopPointEndpoint = "https://gmmybus-async.herokuapp.com";
 
 	/**
 	* Constructor.
