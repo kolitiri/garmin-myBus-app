@@ -13,7 +13,7 @@ This way I can handle a lot bigger TFL responses without the watch crashing, whi
 
 ### Installation
 
-If you already own a Garmin watch, go ahead and download the application through Garmin IQ Connect [here](https://apps.garmin.com/en-US/apps/32c1e832-9bab-4ce3-9461-fb61d8d546a8)
+I have recently removed this app from the garmin store. For best performance, it was using an additional service hosted in heroku to filter massive responses that could not be handled by the watch. If you still want to install you will have to build the project and upload it to your watch.
 
 ### Supported devices
 
